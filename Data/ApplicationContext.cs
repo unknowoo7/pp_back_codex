@@ -48,7 +48,13 @@ public class ApplicationContext(DbContextOptions<ApplicationContext> options) : 
             .Where(entry => entry.State is EntityState.Added or EntityState.Modified)
             .Select(entry => entry.Entity);
 
-        foreach (var workGroup in workGroups)
+        var companyWorkGroups = ChangeTracker.Entries<Company>()
+            .Where(entry => entry.State is EntityState.Added or EntityState.Modified)
+            .Select(entry => entry.Entity.WorkGroup)
+            .Where(workGroup => workGroup is not null)
+            .Cast<WorkGroup>();
+
+        foreach (var workGroup in workGroups.Concat(companyWorkGroups).Distinct())
         {
             var companyName = workGroup.Company?.Name?.Trim();
             workGroup.Name = string.IsNullOrWhiteSpace(companyName)

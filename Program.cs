@@ -4,6 +4,12 @@ using pp_back_codex.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+    });
+
 builder.Services.ConfigureHttpJsonOptions(options =>
 {
     options.SerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
@@ -21,10 +27,6 @@ using (var scope = app.Services.CreateScope())
 }
 
 app.MapGet("/", () => "Hello World!");
-
-app.MapGet("/companies", async (ApplicationContext dbContext) =>
-    await dbContext.Companies
-        .OrderBy(company => company.Id)
-        .ToListAsync());
+app.MapControllers();
 
 app.Run();

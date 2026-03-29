@@ -8,7 +8,7 @@ public class QrCodeConfiguration : IEntityTypeConfiguration<QrCode>
 {
     public void Configure(EntityTypeBuilder<QrCode> builder)
     {
-        builder.Property(code => code.Code).HasMaxLength(256).IsRequired();
+        builder.Property(code => code.Code).IsRequired();
         builder.HasIndex(code => code.Code).IsUnique();
         builder.HasIndex(code => code.CartridgeId).IsUnique();
 
